@@ -1,4 +1,7 @@
 import streamlit as st
+import pandas as pd
+import plotly.express as px
+
 
 st.set_page_config(
     page_title = "Toolkit",
@@ -6,6 +9,55 @@ st.set_page_config(
     menu_items={},
     layout="wide"
 )
+
+if 'clicked' not in st.session_state:
+    st.session_state.clicked = False
+
+attr_name_dict = {
+    "Perspective_Toxicity": "Toxicity",
+    "Perspective_Insult": "Insult",
+    "Perspective_Profanity": "Profanity",
+    "Perspective_Identity_Attack": "Identity Attack",
+    "GPT_Sexism_Score" : "Sexism"
+}
+
+###
+### Button Functions
+###
+def click_button():
+    st.session_state.clicked = True
+
+def reset_button():
+    st.session_state.clicked = False
+
+
+
+### 
+### Data Functions
+###
+
+@st.cache_data
+def load_original_dataset(csv_path):
+    df = pd.read_csv(csv_path)
+    df = df.rename(columns={"User_Is_Sexist": "User_Rated_Sexism", 
+                            "User_Rated_Sexist_Content_Reasoning": "User_Reasoning"})
+    df = df[['Comment_Id', 'Dataset', 'Comment', 'User_Rated_Sexism', 'User_Reasoning',
+             'Perspective_Toxicity', 'Perspective_Identity_Attack', 'Perspective_Insult','Perspective_Profanity',
+             'GPT_Sexism_Rating','GPT_Sexism_Score']]
+    return df
+
+@st.cache_data
+def load_data(data_path):
+    return pd.read_csv(data_path)
+
+df = load_original_dataset("./data/display_sexismdata.csv")
+
+toxicity_pp = load_data("./data/toxicity.csv")
+identityattack_pp = load_data("./data/identityattack.csv")
+insult_pp = load_data("./data/insult.csv")
+profanity_pp = load_data("./data/profanity.csv")
+
+gptsexism_pp = load_data("./data/gptsexism.csv")
 
 st.title("Interactive Analysis")
 
@@ -24,7 +76,8 @@ with dummy[0]:
             "Perspective_Profanity",
             "GPT_Sexism"),
             index = 0,
-            placeholder=" ",
+            placeholder=" ", 
+            on_change=reset_button
         )
     c = iv1.split('_')
     model = c[0]
@@ -49,6 +102,135 @@ st.markdown("");
 
 st.markdown(html_option, unsafe_allow_html=True)
 
+st.markdown("");
+st.markdown("");
+st.markdown("");
+
+button_columns = st.columns(4)
+with button_columns[0]:
+    pass
+with button_columns[1]:
+    pass
+with button_columns[2]:
+    st.button("Run Analysis", type="primary", on_click = click_button)
+with button_columns[3]:
+    pass
+
+st.markdown("");
+st.markdown("");
+st.markdown("");
 
 
+analysis = st.columns(2)
+if st.session_state.clicked:
+    with analysis[0]:
+        if(attr == 'Toxicity'):
+            fig = px.line(toxicity_pp, 
+                    x="Toxicity", 
+                    y="probability_of_user_finding_comment_sexist", 
+                    color = 'dataset',
+                    labels={
+                        "Toxicity": "Perspective Toxicity Score",
+                        "probability_of_user_finding_comment_sexist": "Probability (User finds Comment -> Sexist)",
+                        "dataset": "Forms of Sexism"
+                    },
+                    title = "Relationship b/w Perspective's Toxicity score & Probability (User finds comment Sexist)")
+            fig.update_xaxes(tick0=0.1, dtick=0.1)
+            fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+            sub = st.plotly_chart(fig, 
+                        use_container_width = True, 
+                        selection_mode = "box",
+                        on_select="rerun")
+        
+        elif(attr == 'Identity Attack'):
+            fig = px.line(identityattack_pp, 
+                    x="Identity_Attack", 
+                    y="probability_of_user_finding_comment_sexist", 
+                    color = 'dataset',
+                    labels={
+                        "Identity_Attack": "Perspective Identity Attack Score",
+                        "probability_of_user_finding_comment_sexist": "Probability (User finds Comment -> Sexist)",
+                        "dataset": "Forms of Sexism"
+                    },
+                    title = "Relationship b/w Perspective's Identity Attack score & Probability (User finds comment Sexist)")
+            fig.update_xaxes(tick0=0.1, dtick=0.1)
+            fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+            sub = st.plotly_chart(fig, 
+                        use_container_width = True, 
+                        selection_mode = "box",
+                        on_select="rerun")
+        
+        elif(attr == 'Insult'):
+            fig = px.line(insult_pp, 
+                    x="Insult", 
+                    y="probability_of_user_finding_comment_sexist", 
+                    color = 'dataset',
+                    labels={
+                        "Insult": "Perspective Insult Score",
+                        "probability_of_user_finding_comment_sexist": "Probability (User finds Comment -> Sexist)",
+                        "dataset": "Forms of Sexism"
+                    },
+                    title = "Relationship b/w Perspective's Insult score & Probability (User finds comment Sexist)")
+            fig.update_xaxes(tick0=0.1, dtick=0.1)
+            fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+            sub = st.plotly_chart(fig, 
+                        use_container_width = True, 
+                        selection_mode = "box",
+                        on_select="rerun")
+            
+        elif(attr == 'Profanity'):
+            fig = px.line(profanity_pp, 
+                    x="Profanity", 
+                    y="probability_of_user_finding_comment_sexist", 
+                    color = 'dataset',
+                    labels={
+                        "Profanity": "Perspective Profanity Score",
+                        "probability_of_user_finding_comment_sexist": "Probability (User finds Comment -> Sexist)",
+                        "dataset": "Forms of Sexism"
+                    },
+                    title = "Relationship b/w Perspective's Profanity score & Probability (User finds comment Sexist)")
+            fig.update_xaxes(tick0=0.1, dtick=0.1)
+            fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+            sub = st.plotly_chart(fig, 
+                        use_container_width = True, 
+                        selection_mode = "box",
+                        on_select="rerun")
+            
+        elif(attr == 'Sexism'):
+            fig = px.line(gptsexism_pp, 
+                    x="LLM_SexismScore", 
+                    y="probability_of_user_finding_comment_sexist", 
+                    color = 'dataset',
+                    labels={
+                        "LLM_SexismScore": "GPT Sexism Score",
+                        "probability_of_user_finding_comment_sexist": "Probability (User finds Comment -> Sexist)",
+                        "dataset": "Forms of Sexism"
+                    },
+                    title = "Relationship b/w GPT's Sexism score & Probability (User finds comment Sexist)")
+            fig.update_xaxes(range = [0, 100], dtick=5)
+            fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+            sub = st.plotly_chart(fig, 
+                        use_container_width = True, 
+                        selection_mode = "box",
+                        on_select="rerun")
 
+    with analysis[1]:
+        values = sub.selection.box
+
+        html_cta = f"""
+        <p style ="font-style:italic; color:gray">Select regions in the visualization to drill down on the data.</p>
+        """
+        if(len(values) == 0):
+            st.write(html_cta, unsafe_allow_html = True)
+        else:
+            for i in values:
+                x1 = round(i["x"][0], 2)
+                x2 = round(i["x"][1], 2)
+            st.write("Data that corresponds to the selected range of toxicity scores")
+            key = [name for name in attr_name_dict if attr_name_dict[name] == attr]
+            colname = key[0]
+            st.write(colname)
+            st.write(x1, x2)
+            subset = df[['Dataset', 'Comment', 'User_Rated_Sexism', 'User_Reasoning', colname]]
+            subset = subset[(subset[colname] >= x1) & (subset[colname] <= x2)]
+            st.write(subset.sort_values(by=[colname]))
