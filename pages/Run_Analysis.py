@@ -55,7 +55,6 @@ toxicity_pp = load_data("./data/toxicity.csv")
 identityattack_pp = load_data("./data/identityattack.csv")
 insult_pp = load_data("./data/insult.csv")
 profanity_pp = load_data("./data/profanity.csv")
-all_pp = load_data("./data/all_pp.csv")
 
 gptsexism_pp = load_data("./data/gptsexism.csv")
 
