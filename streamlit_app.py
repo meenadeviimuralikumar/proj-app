@@ -1,19 +1,21 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
+
 
 st.set_page_config(
-    page_title = "Toolkit",
+    page_title = "Interactive Prototype",
     initial_sidebar_state = "expanded",
     menu_items={},
     layout="wide"
 )
 
+
 @st.cache_data
 def load_data(data_path):
     df = pd.read_csv(data_path)
-    df = df.drop(columns=['Dataset'])
-    df = df[['Comment_Id', 
-             'Community', 
+    df = df.drop(columns=['Dataset','Comment_Id'])
+    df = df[['Community', 
              'Comment', 
              'User_Rated_Sexism', 
              'User_Reasoning',
@@ -30,7 +32,6 @@ def getPerspectiveToxicityData(df):
                                 'Perspective_Profanity',
                                 'GPT_Sexism_Score', 
                                 'GPT_Sexism_Rating'])
-    toxicity_df.set_index('Comment_Id', inplace=True)
     return toxicity_df
 
 @st.cache_data
@@ -40,7 +41,6 @@ def getPerspectiveIDAData(df):
                                 'Perspective_Profanity',
                                 'GPT_Sexism_Score', 
                                 'GPT_Sexism_Rating'])
-    ida_df.set_index('Comment_Id', inplace=True)
     return ida_df
 
 @st.cache_data
@@ -50,7 +50,6 @@ def getPerspectiveInsultData(df):
                                 'Perspective_Profanity',
                                 'GPT_Sexism_Score', 
                                 'GPT_Sexism_Rating'])
-    insult_df.set_index('Comment_Id', inplace=True)
     return insult_df
 
 @st.cache_data
@@ -60,7 +59,6 @@ def getPerspectiveProfanityData(df):
                                 'Perspective_Insult',
                                 'GPT_Sexism_Score', 
                                 'GPT_Sexism_Rating'])
-    profanity_df.set_index('Comment_Id', inplace=True)
     return profanity_df
 
 @st.cache_data
@@ -70,7 +68,6 @@ def getGPTData(df):
                                 'Perspective_Insult' ,
                                 'Perspective_Profanity',
                                 'GPT_Sexism_Rating'])
-    gpt_df.set_index('Comment_Id', inplace=True)
     return gpt_df
 
 
@@ -128,11 +125,27 @@ if data_option == 'Sexist_Comment_Dataset':
     with sb2[3]:
         pass
     st.markdown('######')
-    
+
+
     with st.container():
         if(model_option in model_attributes_list):
             st.divider()
             first = st.columns(3)
+            #st.write(pd.crosstab(df['Community'], df['User_Rated_Sexism']))
+            #if(model_option == model_attributes_list[0]):
+            #    histcol = 'Perspective_Toxicity'
+            #elif(model_option == model_attributes_list[1]):
+            #    histcol = 'Perspective_Identity_Attack'
+            #elif(model_option == model_attributes_list[2]):
+            #    histcol = 'Perspective_Insult'
+            #elif(model_option == model_attributes_list[3]):
+            #    histcol = 'Perspective_Profanity'
+            #else:
+            #    histcol = 'GPT_Sexism_Score'
+            #fig = px.histogram(df, x = histcol)
+            #fig.show()
+            #df.hist(column=histcol, bins = 10)
+
             with first[0]:
                 st.write("Filter data by the Community from which the comment was sourced.")
                 cat_list = df.Community.unique()
@@ -154,28 +167,28 @@ if data_option == 'Sexist_Comment_Dataset':
                                     step = 5)
             st.write(" ")
             html_str = f"""
-                <p><i>Viewing {rows} of 2636 rows</p>
+                <p><i>Viewing {rows} rows</p>
                 """
             st.markdown(html_str, unsafe_allow_html = True)
 
     if(model_option == model_attributes_list[0]):
-        st.table(toxicity_df[toxicity_df.Community.isin(cat_list[val]) 
+        st.write(toxicity_df[toxicity_df.Community.isin(cat_list[val]) 
          & (toxicity_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
 
     if(model_option == model_attributes_list[1]):
-        st.table(ida_df[ida_df.Community.isin(cat_list[val]) 
+        st.write(ida_df[ida_df.Community.isin(cat_list[val]) 
          & (ida_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
         
     if(model_option == model_attributes_list[2]):
-        st.table(insult_df[insult_df.Community.isin(cat_list[val]) 
+        st.write(insult_df[insult_df.Community.isin(cat_list[val]) 
          & (insult_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
         
     if(model_option == model_attributes_list[3]):
-        st.table(profanity_df[profanity_df.Community.isin(cat_list[val]) 
+        st.write(profanity_df[profanity_df.Community.isin(cat_list[val]) 
          & (profanity_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
         
     if(model_option == model_attributes_list[4]):
-        st.table(gpt_df[gpt_df.Community.isin(cat_list[val]) 
+        st.write(gpt_df[gpt_df.Community.isin(cat_list[val]) 
          & (gpt_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
 
 
