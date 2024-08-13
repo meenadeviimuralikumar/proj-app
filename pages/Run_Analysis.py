@@ -383,7 +383,7 @@ if n != 0:
             t5 = item["y2"]
             t6 = item["attr"]
             st.markdown("");
-            st.markdown(f"*Model Attribute:* {attr}")
+            st.markdown(f"*Model Attribute:* {t6}")
             st.markdown(f"*X-axis range* {t2} - {t3}")
             st.markdown(f"*Y-axis range* {t4} - {t5}")
             st.markdown(f":blue-background[Annotation]: {t1} ")
