@@ -1,8 +1,16 @@
 import streamlit as st
+import plotly.express as px
+import pandas as pd
 
 st.set_page_config(
     layout="centered"
 )
+
+@st.cache_data
+def load_dummy_data(path):
+    return pd.read_csv(path)
+
+dummy_df = load_dummy_data("./data/expected_behavior_curves.csv")
 
 st.header("Introduction to Likelihood Estimation")
 
@@ -41,6 +49,39 @@ st.subheader("if we collect a large sample of data, we can tell something about 
 st.image("./images/exp2.jpg")
 st.divider()
 
+st.markdown("For example, Perspective has the following rubric for toxicity detection")
+
+st.markdown("- 0.0 and 0.30 - Not Toxic")
+st.markdown("- 0.31 and 0.70 - Hard to say if Toxic")
+st.markdown("- 0.71 and 1.00 - Toxic")
+
+st.markdown("If we collect a set of comments and ask **Users** to rate the comment as one of three options: **Not toxic, Hard to say, Toxic**...")
+st.markdown("")
+st.markdown("...And if we get **Perspective** to score the *same set of comments*")
+st.markdown("")
+st.markdown("")
+
+st.markdown("What will the resulting probability distribution look like?")
+
+
+fig = px.line(dummy_df, 
+                x="Perspective_Toxicity", 
+                y="Probability", 
+                color = 'User_Rating',
+                labels={
+                        "Perspective_Toxicity": "Perspective Toxicity Score",
+                        "Probability": "Probability",
+                        "User_Rating": "User_Rating"
+                },
+                title = "Expected Alignment between Model and User Judgements")
+
+with st.expander("View it"):
+    xyz = st.plotly_chart(fig, 
+                      use_container_width = True)
+
+st.divider()
+
 st.markdown("In the next Section, you can run analyses to see such probability distributions.")
 st.markdown("Since sexism is a binary variable (True/False), we will be running a _logistic regression analysis_ to generate the probability curves.")
 st.markdown("You can play around with the variables and view different probability curves.")
+
