@@ -51,17 +51,11 @@ st.divider()
 
 st.markdown("For example, Perspective has the following rubric for toxicity detection")
 
-st.markdown("- 0.0 and 0.30 - Not Toxic")
-st.markdown("- 0.31 and 0.70 - Hard to say if Toxic")
-st.markdown("- 0.71 and 1.00 - Toxic")
-
-st.markdown("If we collect a set of comments and ask **Users** to rate the comment as one of three options: **Not toxic, Hard to say, Toxic**...")
+st.markdown("- 0.0 - 0.30 - Not Toxic")
+st.markdown("- 0.31 - 0.70 - Hard to say if Toxic")
+st.markdown("- 0.71 - 1.00 - Toxic")
 st.markdown("")
-st.markdown("...And if we get **Perspective** to score the *same set of comments*")
-st.markdown("")
-st.markdown("")
-
-st.markdown("What will the resulting probability distribution look like?")
+st.markdown("For a given set of comments if :green[Users] rated comments as :green[Not toxic, Hard to say, Toxic], and :violet[Perspective] scores the same comments from :violet[0.0 - 1.0] ...  What will perfect alignment will look like?")
 
 
 fig = px.line(dummy_df, 
