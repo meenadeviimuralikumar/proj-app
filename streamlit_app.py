@@ -110,10 +110,8 @@ if data_option == 'Sexist_Comment_Dataset':
     with sb2[0]:
         model_option = st.selectbox(
         "Select a model and attribute to view scores",
-        ("Perspective Toxicity", 
+        ("Perspective Profanity",
          "Perspective Identity Attack",
-         "Perspective Insult",
-         "Perspective Profanity",
          "GPT Sexism"),
         index = None,
         placeholder=" ",)

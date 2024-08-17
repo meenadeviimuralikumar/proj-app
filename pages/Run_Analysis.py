@@ -121,10 +121,8 @@ dummy = st.columns(2)
 with dummy[0]:
     iv1 = st.selectbox(
             "Choose the model attribute you would like to test",
-            ("Perspective_Toxicity", 
-            "Perspective_Identity_Attack",
-            "Perspective_Insult",
-            "Perspective_Profanity",
+            ("Perspective_Profanity",
+             "Perspective_Identity_Attack",
             "GPT_Sexism"),
             index = 0,
             placeholder=" ", 

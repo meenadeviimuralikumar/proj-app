@@ -49,11 +49,11 @@ st.subheader("if we collect a large sample of data, we can tell something about 
 st.image("./images/exp2.jpg")
 st.divider()
 
-st.markdown("For example, Perspective has the following rubric for toxicity detection")
+st.markdown("For example, **Perspective** has the following rubric for **Toxicity** detection")
 
-st.markdown("- 0.0 - 0.30 - Not Toxic")
-st.markdown("- 0.31 - 0.70 - Hard to say if Toxic")
-st.markdown("- 0.71 - 1.00 - Toxic")
+st.markdown("- 0.0 - 0.30 corresponds to **Not Toxic**")
+st.markdown("- 0.31 - 0.70 corresponds to **Hard to say if Toxic**")
+st.markdown("- 0.71 - 1.00 corresponds to **Toxic**")
 st.markdown("")
 st.markdown("For a given set of comments if :green[Users] rated comments as :green[Not toxic, Hard to say, Toxic], and :violet[Perspective] scores the same comments from :violet[0.0 - 1.0] ...  What will perfect alignment will look like?")
 
@@ -64,7 +64,7 @@ fig = px.line(dummy_df,
                 color = 'User_Rating',
                 labels={
                         "Perspective_Toxicity": "Perspective Toxicity Score",
-                        "Probability": "Probability",
+                        "Probability": "Probability of providing that User_Rating",
                         "User_Rating": "User_Rating"
                 },
                 title = "Expected Alignment between Model and User Judgements")
