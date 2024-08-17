@@ -190,6 +190,7 @@ with analysis[0]:
                 title = "Relationship b/w Perspective's Toxicity score <br> & Probability (User finds comment Sexist)")
         fig.update_xaxes(tick0=0.1, dtick=0.1)
         fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+        fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
         sub = st.plotly_chart(fig, 
                         use_container_width = True, 
                         selection_mode = "box",
@@ -207,8 +208,8 @@ with analysis[0]:
                     },
                 category_orders={"Community": ['A','B','C']},
                 title = "Relationship b/w Perspective's Identity Attack score <br> & Probability (User finds comment Sexist)")
-        fig.update_xaxes(tick0=0.1, dtick=0.1)
-        fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+        fig.update_xaxes(tick0=0.0, dtick=0.1)
+        fig.update_yaxes(tickvals = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
         sub = st.plotly_chart(fig, 
                         use_container_width = True, 
                         selection_mode = "box",
@@ -227,7 +228,7 @@ with analysis[0]:
                 category_orders={"Community": ['A','B','C']},
                 title = "Relationship b/w Perspective's Insult score <br> & Probability (User finds comment Sexist)")
         fig.update_xaxes(tick0=0.1, dtick=0.1)
-        fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+        fig.update_yaxes(tickvals = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
         sub = st.plotly_chart(fig, 
                         use_container_width = True, 
                         selection_mode = "box",
@@ -247,6 +248,7 @@ with analysis[0]:
                 title = "Relationship b/w Perspective's Profanity score <br> & Probability (User finds comment Sexist)")
         fig.update_xaxes(tick0=0.1, dtick=0.1)
         fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+        #fig.update_yaxes(tickvals = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
         sub = st.plotly_chart(fig, 
                         use_container_width = True, 
                         selection_mode = "box",
@@ -265,7 +267,8 @@ with analysis[0]:
                     category_orders={"Community": ['A','B','C']},
                     title = "Relationship b/w GPT's Sexism score <br> & Probability (User finds comment Sexist)")
         fig.update_xaxes(range = [0, 100], dtick=5)
-        fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
+        fig.update_yaxes(tickvals = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+        #fig.update_yaxes(range=[0.0, 1.0], dtick = 0.25)
         sub = st.plotly_chart(fig, 
                         use_container_width = True, 
                         selection_mode = "box",
