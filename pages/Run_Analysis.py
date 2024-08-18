@@ -291,107 +291,107 @@ with analysis[1]:
                 st.session_state.box_y[0] = round(i["y"][1], 2)
                 st.session_state.box_y[1] = round(i["y"][0], 2)
 
-            tab1, tab2 = st.tabs(["Annotate", "Selected Data"])
-            with tab1:    
-                ### code goes here
-                st.write("You can annotate the selected region. Enter insights or questions here.")
-                annotation = st.text_area(label='Add Annotation',
-                                          value=None,
-                                          key = 'text_key',
-                                          label_visibility="hidden",
-                                          on_change=add_annotation)
-            with tab2:
-                st.write("Data that corresponds to the selected range of model attribute scores")
-                key = [name for name in attr_name_dict if attr_name_dict[name] == attr]
-                colname = key[0]
+            #tab1, tab2 = st.tabs(["Annotate", "Selected Data"])
+            #with tab1:    
+            #    ### code goes here
+            #    st.write("You can annotate the selected region. Enter insights or questions here.")
+            #    annotation = st.text_area(label='Add Annotation',
+            #                              value=None,
+            #                              key = 'text_key',
+            #                              label_visibility="hidden",
+            #                              on_change=add_annotation)
+           
+            st.write("Data that corresponds to the selected range of model attribute scores")
+            key = [name for name in attr_name_dict if attr_name_dict[name] == attr]
+            colname = key[0]
                 #st.write(colname)
                 #st.write(x1, x2)
                 #st.write(y1, y2)
-                x1 = st.session_state.box_x[0]
-                x2 = st.session_state.box_x[1]
+            x1 = st.session_state.box_x[0]
+            x2 = st.session_state.box_x[1]
 
-                y2 = st.session_state.box_y[0]
-                y1 = st.session_state.box_y[1]
+            y2 = st.session_state.box_y[0]
+            y1 = st.session_state.box_y[1]
 
-                subset = df[['Community', 'Comment', 'User_Rated_Sexism', 'User_Reasoning', colname]]
-                subset = subset[(subset[colname] >= x1) & (subset[colname] <= x2)]
-                if(colname == 'Perspective_Toxicity'):
-                    use_df = toxicity_pp
-                    use_df = use_df[(use_df['Perspective_Toxicity'] >= x1) &
+            subset = df[['Community', 'Comment', 'User_Rated_Sexism', 'User_Reasoning', colname]]
+            subset = subset[(subset[colname] >= x1) & (subset[colname] <= x2)]
+            if(colname == 'Perspective_Toxicity'):
+                use_df = toxicity_pp
+                use_df = use_df[(use_df['Perspective_Toxicity'] >= x1) &
                                         (use_df['Perspective_Toxicity'] <= x2)]
-                elif(colname == 'Perspective_Identity_Attack'):
-                    use_df = identityattack_pp
-                    use_df = use_df[(use_df['Perspective_Identity_Attack'] >= x1) &
+            elif(colname == 'Perspective_Identity_Attack'):
+                use_df = identityattack_pp
+                use_df = use_df[(use_df['Perspective_Identity_Attack'] >= x1) &
                                         (use_df['Perspective_Identity_Attack'] <= x2)]
-                elif(colname == 'Perspective_Insult'):
-                    use_df = insult_pp
-                    use_df = use_df[(use_df['Perspective_Insult'] >= x1) &
+            elif(colname == 'Perspective_Insult'):
+                use_df = insult_pp
+                use_df = use_df[(use_df['Perspective_Insult'] >= x1) &
                                         (use_df['Perspective_Insult'] <= x2)]
-                elif(colname == 'Perspective_Profanity'):
-                    use_df = profanity_pp
-                    use_df = use_df[(use_df['Perspective_Profanity'] >= x1) &
+            elif(colname == 'Perspective_Profanity'):
+                use_df = profanity_pp
+                use_df = use_df[(use_df['Perspective_Profanity'] >= x1) &
                                         (use_df['Perspective_Profanity'] <= x2)]
-                else:
-                    use_df = gptsexism_pp
-                    use_df = use_df[(use_df['GPT_Sexism_Score'] >= x1) &
+            else:
+                use_df = gptsexism_pp
+                use_df = use_df[(use_df['GPT_Sexism_Score'] >= x1) &
                                         (use_df['GPT_Sexism_Score'] <= x2)]
                     
-                use_df = use_df[(use_df['probability_of_user_finding_comment_sexist'] >= y2) & 
+            use_df = use_df[(use_df['probability_of_user_finding_comment_sexist'] >= y2) & 
                                     (use_df['probability_of_user_finding_comment_sexist'] <= y1)]
-                selected_communities = use_df['Community'].unique()
+            selected_communities = use_df['Community'].unique()
                 #st.write(selected_communities)
-                subset = subset[subset['Community'].isin(selected_communities)]
-                st.write(subset.sort_values(by=[colname]))
+            subset = subset[subset['Community'].isin(selected_communities)]
+            st.write(subset.sort_values(by=[colname]))
 
 
 
-st.markdown("**Notes/Observations**")
-n = len(st.session_state.list_of_annotations)
-ncols = 2
-nrows = 1
-if n != 0:
-    if (n < ncols):
-       nrows = 1
-    elif (n % 2 == 0):
-        nrows = int(n/2)
-    elif(n % 2 != 0):
-        nrows = int(n/2) + 1
+#st.markdown("**Notes/Observations**")
+#n = len(st.session_state.list_of_annotations)
+#ncols = 2
+#nrows = 1
+#if n != 0:
+#    if (n < ncols):
+#       nrows = 1
+#    elif (n % 2 == 0):
+#        nrows = int(n/2)
+#    elif (n % 2 != 0):
+#        nrows = int(n/2) + 1
 
-    list_iter = 0    
-    for i in range(nrows):
-        cols = st.columns(2)
-        with cols[0]:
-            item = st.session_state.list_of_annotations[list_iter]
-            t1 = item["annotation"]
-            t2 = item["x1"]
-            t3 = item["x2"]
-            t4 = item["y1"]
-            t5 = item["y2"]
-            t6 = item["attr"]
-            st.markdown("");
-            st.markdown(f"*Model Attribute:* {t6}")
-            st.markdown(f"*X-axis range* {t2} - {t3}")
-            st.markdown(f"*Y-axis range* {t4} - {t5}")
-            st.markdown(f":blue-background[Annotation]: {t1} ")
-            st.markdown("");
-            list_iter = list_iter + 1
-        with cols[1]:
-            if(list_iter == n or list_iter > n):
-                pass
-            else:
-                item = st.session_state.list_of_annotations[list_iter]
-                t1 = item["annotation"]
-                t2 = item["x1"]
-                t3 = item["x2"]
-                t4 = item["y1"]
-                t5 = item["y2"]
-                t6 = item["attr"]
-                st.markdown("");
-                st.markdown(f"*Model Attribute:* {t6}")
-                st.markdown(f"*X-axis range* {t2} - {t3}")
-                st.markdown(f"*Y-axis range* {t4} - {t5}")
-                st.markdown(f":blue-background[Annotation]: {t1} ")
-                st.markdown("");
-                list_iter = list_iter + 1
-            
+#    list_iter = 0
+#    for i in range(nrows):
+#        cols = st.columns(2)
+#        with cols[0]:
+#            item = st.session_state.list_of_annotations[list_iter]
+#            t1 = item["annotation"]
+#            t2 = item["x1"]
+#            t3 = item["x2"]
+#            t4 = item["y1"]
+#            t5 = item["y2"]
+#            t6 = item["attr"]
+#            st.markdown("")
+#            st.markdown(f"*Model Attribute:* {t6}")
+#            st.markdown(f"*X-axis range* {t2} - {t3}")
+#            st.markdown(f"*Y-axis range* {t4} - {t5}")
+#            st.markdown(f":blue-background[Annotation]: {t1} ")
+#            st.markdown("")
+#            list_iter = list_iter + 1
+#        with cols[1]:
+#            if (list_iter == n or list_iter > n):
+#                pass
+#            else:
+#                item = st.session_state.list_of_annotations[list_iter]
+#                t1 = item["annotation"]
+#                t2 = item["x1"]
+#                t3 = item["x2"]
+#                t4 = item["y1"]
+#                t5 = item["y2"]
+#                t6 = item["attr"]
+#                st.markdown("")
+#                st.markdown(f"*Model Attribute:* {t6}")
+#                st.markdown(f"*X-axis range* {t2} - {t3}")
+#                st.markdown(f"*Y-axis range* {t4} - {t5}")
+#                st.markdown(f":blue-background[Annotation]: {t1} ")
+#                st.markdown("")
+#                list_iter = list_iter + 1
+
         

@@ -157,36 +157,76 @@ if data_option == 'Sexist_Comment_Dataset':
                 )
                 bool_pos =  True if pos == 'Sexist' else False
             with first[2]:
-                st.write("Select number of rows")
-                rows = st.number_input(" ", 
-                                    min_value = 5,
-                                    max_value = 25,
-                                    step = 5)
+                st.write("Select upper or lower range of model scores, with cutoff at 0.5/50")
+                #rows = st.number_input(" ", 
+                #                    min_value = 5,
+                #                    max_value = 25,
+                #                    step = 5)
+                
+                scores = st.radio(
+                    " ",
+                    ["Lower Range", "Upper Range"],
+                )
+               
             st.write(" ")
-            html_str = f"""
-                <p><i>Viewing {rows} rows</p>
-                """
-            st.markdown(html_str, unsafe_allow_html = True)
+            #html_str = f"""
+            #    <p><i>Viewing {rows} rows</p>
+            #    """
+            #st.markdown(html_str, unsafe_allow_html = True)
+            if(scores == 'Lower Range'):
+                lb_score = 1
+            elif(scores == 'Upper Range'):
+                lb_score = 0
 
     if(model_option == model_attributes_list[0]):
         st.write(toxicity_df[toxicity_df.Community.isin(cat_list[val]) 
-         & (toxicity_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
+         & (toxicity_df['User_Rated_Sexism'] == bool_pos)])
 
     if(model_option == model_attributes_list[1]):
-        st.write(ida_df[ida_df.Community.isin(cat_list[val]) 
-         & (ida_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
+        if(lb_score) == 1:
+            st.write(ida_df[ida_df.Community.isin(cat_list[val]) 
+                & (ida_df['User_Rated_Sexism'] == bool_pos)
+                & (ida_df['Perspective_Identity_Attack'] >= 0.0)
+                & (ida_df['Perspective_Identity_Attack'] < 0.5)
+                ])
+        else:
+            st.write(ida_df[ida_df.Community.isin(cat_list[val]) 
+                & (ida_df['User_Rated_Sexism'] == bool_pos)
+                & (ida_df['Perspective_Identity_Attack'] >= 0.5)
+                & (ida_df['Perspective_Identity_Attack'] < 1.0)
+                ])
         
     if(model_option == model_attributes_list[2]):
         st.write(insult_df[insult_df.Community.isin(cat_list[val]) 
          & (insult_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
         
     if(model_option == model_attributes_list[3]):
-        st.write(profanity_df[profanity_df.Community.isin(cat_list[val]) 
-         & (profanity_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
+        if(lb_score) == 1:
+            st.write(profanity_df[profanity_df.Community.isin(cat_list[val]) 
+                & (profanity_df['User_Rated_Sexism'] == bool_pos)
+                & (profanity_df['Perspective_Profanity'] >= 0.0)
+                & (profanity_df['Perspective_Profanity'] < 0.5)
+                ])
+        else:
+            st.write(profanity_df[profanity_df.Community.isin(cat_list[val]) 
+                & (profanity_df['User_Rated_Sexism'] == bool_pos)
+                & (profanity_df['Perspective_Profanity'] >= 0.5)
+                & (profanity_df['Perspective_Profanity'] < 1.0)
+                ])
         
     if(model_option == model_attributes_list[4]):
-        st.write(gpt_df[gpt_df.Community.isin(cat_list[val]) 
-         & (gpt_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
+        if(lb_score) == 1:
+            st.write(gpt_df[gpt_df.Community.isin(cat_list[val]) 
+                & (gpt_df['User_Rated_Sexism'] == bool_pos)
+                & (gpt_df['GPT_Sexism_Score'] >= 0)
+                & (gpt_df['GPT_Sexism_Score'] < 50)
+                ])
+        else:
+            st.write(gpt_df[gpt_df.Community.isin(cat_list[val]) 
+                & (gpt_df['User_Rated_Sexism'] == bool_pos)
+                & (gpt_df['GPT_Sexism_Score'] >= 50)
+                & (gpt_df['GPT_Sexism_Score'] < 100)
+                ])
 
 
 if data_option == 'Other':
