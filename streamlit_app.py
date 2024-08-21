@@ -110,9 +110,9 @@ if data_option == 'Sexist_Comment_Dataset':
     with sb2[0]:
         model_option = st.selectbox(
         "Select a model and attribute to view scores",
-        ("Perspective Profanity",
-         "Perspective Identity Attack",
-         "GPT Sexism"),
+        ("Perspective Identity Attack",
+         "GPT Sexism",
+         "Perspective Insult"),
         index = None,
         placeholder=" ",)
     with sb2[1]:
@@ -165,7 +165,7 @@ if data_option == 'Sexist_Comment_Dataset':
                 
                 scores = st.radio(
                     " ",
-                    ["Lower Range", "Upper Range"],
+                    ["Lower Range (< 0.5)", "Upper Range (> 0.5)"],
                 )
                
             st.write(" ")
@@ -173,9 +173,9 @@ if data_option == 'Sexist_Comment_Dataset':
             #    <p><i>Viewing {rows} rows</p>
             #    """
             #st.markdown(html_str, unsafe_allow_html = True)
-            if(scores == 'Lower Range'):
+            if(scores == 'Lower Range (< 0.5)'):
                 lb_score = 1
-            elif(scores == 'Upper Range'):
+            elif(scores == 'Upper Range (> 0.5)'):
                 lb_score = 0
 
     if(model_option == model_attributes_list[0]):
@@ -197,8 +197,18 @@ if data_option == 'Sexist_Comment_Dataset':
                 ])
         
     if(model_option == model_attributes_list[2]):
-        st.write(insult_df[insult_df.Community.isin(cat_list[val]) 
-         & (insult_df['User_Rated_Sexism'] == bool_pos)].sample(n = rows))
+        if(lb_score) == 1:
+            st.write(insult_df[insult_df.Community.isin(cat_list[val]) 
+                & (insult_df['User_Rated_Sexism'] == bool_pos)
+                & (insult_df['Perspective_Insult'] >= 0.0)
+                & (insult_df['Perspective_Insult'] < 0.5)
+                ])
+        else:
+            st.write(insult_df[insult_df.Community.isin(cat_list[val]) 
+                & (insult_df['User_Rated_Sexism'] == bool_pos)
+                & (insult_df['Perspective_Insult'] >= 0.5)
+                & (insult_df['Perspective_Insult'] < 1.0)
+                ])
         
     if(model_option == model_attributes_list[3]):
         if(lb_score) == 1:

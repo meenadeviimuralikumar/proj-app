@@ -121,7 +121,7 @@ dummy = st.columns(2)
 with dummy[0]:
     iv1 = st.selectbox(
             "Choose the model attribute you would like to test",
-            ("Perspective_Profanity",
+            ("Perspective_Insult",
              "Perspective_Identity_Attack",
             "GPT_Sexism"),
             index = 0,
@@ -227,8 +227,8 @@ with analysis[0]:
                     },
                 category_orders={"Community": ['A','B','C']},
                 title = "Relationship b/w Perspective's Insult score <br> & Probability (User finds comment Sexist)")
-        fig.update_xaxes(tick0=0.1, dtick=0.1)
-        fig.update_yaxes(tickvals = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+        fig.update_xaxes(tick0=0.0, dtick=0.1)
+        fig.update_yaxes(range=[0.0, 1.1], dtick = 0.2)
         sub = st.plotly_chart(fig, 
                         use_container_width = True, 
                         selection_mode = "box",
